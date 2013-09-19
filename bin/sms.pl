@@ -9,16 +9,12 @@ use BulkSMS::User;
 use BulkSMS::Message;
 
 my $user = BulkSMS::User->new(
-    username   => 'demo',
-    password   => 'demo',
-    senderid   => 'Demo'
+    api_key   => 'api_key',
+    senderid  => 'Demo'
 );
 
 # To check Credits
 print $user->balance();
-
-# To change password
-print $user->new_password( 'new_password' );
 
 # To send message
 my $message = BulkSMS::Message->new(
