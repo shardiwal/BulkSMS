@@ -34,7 +34,7 @@ has 'sms_url' => (
     isa     => 'Str',
     default => sub {
         my ($self) = @_;
-        return BulkSMS::Util::base_url . "/urllongsms.php";
+        return BulkSMS::Util::base_url . "/web2sms.php";
     }
 );
 
@@ -43,7 +43,7 @@ has 'delivery_status_url' => (
     isa     => 'Str',
     default => sub {
         my ($self) = @_;
-        return BulkSMS::Util::base_url . "/responce.php";
+        return BulkSMS::Util::base_url . "/status.php";
     }
 );
 
@@ -51,15 +51,6 @@ has 'user' => (
     is       => 'ro',
     isa      => 'BulkSMS::User',
     required => 1
-);
-
-has 'response_y' => (
-    is      => 'rw',
-    isa     => 'Str',
-    default => sub {
-        my ($self) = @_;
-        return 'Y';
-    }
 );
 
 =head1 SYNOPSIS
@@ -102,8 +93,7 @@ sub _send_message {
             GET => BulkSMS::Util::prepare_uri_as_string(
                 $self->sms_url,
                 [
-                    username      => $self->user->username,
-                    pass          => $self->user->password,
+                    workingkey    => $self->user->api_key,
                     senderid      => $self->user->senderid,
                     message       => $self->message,
                     dest_mobileno => $mobile_nos
@@ -131,7 +121,10 @@ sub delivery_report {
     my $delivery_status_request = $browser->request(
         HTTP::Request->new(
             GET => BulkSMS::Util::prepare_uri_as_string(
-                $self->delivery_status_url, [ Scheduleid => $message_id ]
+                $self->delivery_status_url, [ 
+                    messageid  => $message_id, 
+                    workingkey => $self->user->api_key
+                ]
             )
         )
     );

@@ -13,10 +13,10 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub base_url {
-    return "http://203.129.203.254/sms/user";
+    return "http://ht.bulksms-service.com/api/";
 }
 
 sub inform_user {

@@ -9,19 +9,13 @@ BulkSMS::User
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
-has 'username' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1
-);
-
-has 'password' => (
+has 'api_key' => (
     is       => 'ro',
     isa      => 'Str',
     required => 1
@@ -50,16 +44,7 @@ has 'balance_check_url' => (
     isa     => 'Str',
     default => sub {
         my ($self) = @_;
-        return BulkSMS::Util::base_url . "/balance_check.php";
-    }
-);
-
-has 'change_password_url' => (
-    is      => 'ro',
-    isa     => 'Str',
-    default => sub {
-        my ($self) = @_;
-        return BulkSMS::Util::base_url . "/change_password.php";
+        return BulkSMS::Util::base_url . "/credits.php";
     }
 );
 
@@ -72,8 +57,7 @@ Perhaps a little code snippet.
     use BulkSMS::Message;
 
     my $user = BulkSMS::User->new(
-        user_name   => $username,
-        password    => $password,
+        api_key   => $api_key,
         senderid   => $sender_id
     );
 
@@ -90,27 +74,7 @@ sub balance {
             GET => BulkSMS::Util::prepare_uri_as_string(
                 $self->balance_check_url,
                 [
-                    username => $self->username,
-                    pass     => $self->password,
-                ]
-            )
-        )
-    );
-    return $smsrequest->decoded_content;
-}
-
-sub new_password {
-    my ( $self, $new_password ) = @_;
-    return "New Password can't be empty ";
-
-    my $smsrequest = $self->browser->request(
-        HTTP::Request->new(
-            GET => BulkSMS::Util::prepare_uri_as_string(
-                $self->change_password_url,
-                [
-                    username    => $self->username,
-                    oldpassword => $self->password,
-                    newpassword => $new_password
+                    workingkey => $self->api_key
                 ]
             )
         )
