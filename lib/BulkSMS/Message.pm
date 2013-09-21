@@ -94,9 +94,9 @@ sub _send_message {
                 $self->sms_url,
                 [
                     workingkey    => $self->user->api_key,
-                    senderid      => $self->user->senderid,
+                    sender        => $self->user->senderid,
                     message       => $self->message,
-                    dest_mobileno => $mobile_nos
+                    to            => $mobile_nos
                 ]
             )
         )
